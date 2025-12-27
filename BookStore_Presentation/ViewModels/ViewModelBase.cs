@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookStore_Presentation.ViewModels
 {
-    internal class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
@@ -20,4 +20,3 @@ namespace BookStore_Presentation.ViewModels
         }
     }
 }
-    

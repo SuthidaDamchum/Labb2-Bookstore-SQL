@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using BookStore_Domain;
 using BookStore_Infrastrcuture.Data.Model;
 using Microsoft.EntityFrameworkCore;

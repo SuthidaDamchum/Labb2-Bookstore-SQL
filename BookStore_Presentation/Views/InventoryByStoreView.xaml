@@ -7,25 +7,47 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=UI:InventoryByStoreViewModel, IsDesignTimeCreatable=True}">
 
+
+
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
+
         </Grid.ColumnDefinitions>
 
         <!-- Lista butiker -->
         <ListBox ItemsSource="{Binding Stores}"
                  SelectedItem="{Binding SelectedStore}"
                  DisplayMemberPath="StoreName"/>
+        
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Buttons -->
+                <RowDefinition Height="*"/>
+                <!-- DataGrid -->
+            </Grid.RowDefinitions>
 
-        <!-- DataGrid med lagersaldo -->
-        <DataGrid ItemsSource="{Binding Inventory}" Grid.Column="1" AutoGenerateColumns="False" Margin="10,0,0,0">
+            <!-- Buttons Row -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0" Margin="10,0,0,300">
+                <Button Content="Add Quantity" Width="103" Height="25" Margin="0,0,10,0"/>
+                <Button Content="Decrease Quantity" Width="105" Height="25"/>
+            </StackPanel>
+
+
+            <!-- DataGrid med lagersaldo -->
+        <DataGrid ItemsSource="{Binding Inventory}" Grid.Column="1" AutoGenerateColumns="False" Margin="10,50,0,0">
+         
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" />
                 <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
                 <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" />
             </DataGrid.Columns>
+            
+            
         </DataGrid>
+        </Grid>
     </Grid>
 </UserControl>

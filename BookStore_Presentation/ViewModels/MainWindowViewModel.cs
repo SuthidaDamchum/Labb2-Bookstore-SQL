@@ -18,12 +18,19 @@ namespace BookStore_Presentation.ViewModels
 
         public ICommand OpenInventoryByStoreCommand { get; }
 
+        public ICommand OpenBookAdminCommand { get; }
+
         public MainWindowViewModel()
         {
             OpenInventoryByStoreCommand = new DelegateCommand(_ =>
             {
                 CurrentViewModel = new InventoryByStoreViewModel(); // navigation
             });
+
+            OpenBookAdminCommand = new DelegateCommand(_ =>
+            
+            CurrentViewModel = new BooksAdminViewModel());
+            }
         }
+
     }
-}

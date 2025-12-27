@@ -10,7 +10,7 @@ namespace BookStore_Presentation.Views
         public InventoryByStoreView()
         {
             InitializeComponent();
-            //DataContext = new InventoryByStoreViewModel(); // <-- Rätt ViewModel
+       
         }
     }
 }

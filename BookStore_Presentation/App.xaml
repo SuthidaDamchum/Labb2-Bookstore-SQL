@@ -12,5 +12,10 @@
         <DataTemplate DataType="{x:Type UI:InventoryByStoreViewModel}">
             <Views:InventoryByStoreView />
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type UI:BooksAdminViewModel}">
+            <Views:BooksAdminView />
+        </DataTemplate>
+        
     </Application.Resources>
 </Application>
