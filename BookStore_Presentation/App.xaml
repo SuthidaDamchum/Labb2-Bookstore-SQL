@@ -1,9 +1,16 @@
 ﻿<Application x:Class="BookStore_Presentation.App"
+             xmlns:Views="clr-namespace:BookStore_Presentation.Views"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:BookStore_Presentation"
-             StartupUri="MainWindow.xaml">
+             StartupUri="Windows\MainWindow.xaml"
+             xmlns:UI="clr-namespace:BookStore_Presentation.ViewModels">
+
+
     <Application.Resources>
-         
+
+        <DataTemplate DataType="{x:Type UI:InventoryByStoreViewModel}">
+            <Views:InventoryByStoreView />
+        </DataTemplate>
     </Application.Resources>
 </Application>
