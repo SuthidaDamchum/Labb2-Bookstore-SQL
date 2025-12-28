@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using BookStore_Domain;
 using BookStore_Infrastrcuture.Data.Model;
+using BookStore_Presentation.Command;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore_Presentation.ViewModels
@@ -24,11 +25,64 @@ namespace BookStore_Presentation.ViewModels
             }
         }
 
+        private InventoryItem? _selectedInventoryItem;
+        public InventoryItem? SelectedInventoryItem
+        {
+            get => _selectedInventoryItem;
+            set
+            {
+                _selectedInventoryItem = value;
+                RaisePropertyChanged();
+                ((DelegateCommand)IncreaseQuantityCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)DecreaseQuantityCommand).RaiseCanExecuteChanged();
+            }
+        }
+
+
+
+        public DelegateCommand IncreaseQuantityCommand { get; }
+        public DelegateCommand DecreaseQuantityCommand { get; }
+
         public InventoryByStoreViewModel()
         {
             LoadStores();
+
+            IncreaseQuantityCommand = new DelegateCommand(
+               _ =>
+               {
+                   if (SelectedInventoryItem != null)
+                   {
+                       SelectedInventoryItem.Quantity++;
+                       UpdateQuantityInDatabase(SelectedInventoryItem, +1);
+                   }
+               },
+               _ => SelectedInventoryItem != null
+           );
+
+            DecreaseQuantityCommand = new DelegateCommand(
+                _ =>
+                {
+                    if (SelectedInventoryItem != null && SelectedInventoryItem.Quantity > 0)
+                    {
+                        SelectedInventoryItem.Quantity--;
+                        UpdateQuantityInDatabase(SelectedInventoryItem, -1);
+                    }
+                },
+                _ => SelectedInventoryItem != null && SelectedInventoryItem.Quantity > 0
+            );
         }
 
+        private void UpdateQuantityInDatabase(InventoryItem item, int delta)
+        {
+            var inventory = _context.Inventories
+                .FirstOrDefault(i => i.Isbn13 == item.ISBN && i.StoreId == item.StoreId);
+
+            if (inventory != null)
+            {
+                inventory.Quantity += delta;
+                _context.SaveChanges();
+            }
+        }
         private void LoadStores()
         {
             Stores = new ObservableCollection<Store>(_context.Stores.ToList());
