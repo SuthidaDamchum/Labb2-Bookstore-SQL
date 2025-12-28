@@ -32,13 +32,13 @@
 
             <!-- Buttons Row -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0" Margin="10,0,0,300">
-                <Button Content="increase Quantity" Width="103" Height="25" Margin="0,0,10,0" Command="{Binding IncreaseQuantityCommand}"/>
+                <Button Content="Increase Quantity" Width="103" Height="25" Margin="0,0,10,0" Command="{Binding IncreaseQuantityCommand}"/>
                 <Button Content="Decrease Quantity" Width="105" Height="25" Command="{Binding DecreaseQuantityCommand}" />
             </StackPanel>
 
 
             <!-- DataGrid med lagersaldo -->
-            <DataGrid ItemsSource="{Binding Inventory}" SelectedItem="{Binding SelectedInventoryItem, Mode=TwoWay}" Grid.Column="1" AutoGenerateColumns="False" Margin="10,50,0,0">
+            <DataGrid ItemsSource="{Binding Inventory}" SelectedItem="{Binding SelectedInventoryItem, Mode=TwoWay}" IsReadOnly="True" Grid.Column="1" AutoGenerateColumns="False" Margin="10,50,0,0">
          
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" />

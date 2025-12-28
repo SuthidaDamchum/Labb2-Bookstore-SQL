@@ -79,7 +79,7 @@ namespace BookStore_Presentation.ViewModels
 
             if (inventory != null)
             {
-                inventory.Quantity += delta;
+                inventory.Quantity = item.Quantity;
                 _context.SaveChanges();
             }
         }
@@ -103,7 +103,8 @@ namespace BookStore_Presentation.ViewModels
                         ISBN = i.Isbn13Navigation.Isbn13,
                         Title = i.Isbn13Navigation.Title,
                         Price = i.Isbn13Navigation.Price ?? 0m,
-                        Quantity = i.Quantity
+                        Quantity = i.Quantity,
+                        StoreId = i.StoreId
                     }).ToList()
             );
             RaisePropertyChanged(nameof(Inventory));
