@@ -20,8 +20,6 @@
             <Button Content="List Inventory by Store" 
                     Margin="10"
                     Command="{Binding OpenInventoryByStoreCommand}"/>
-            <Button Content="Add Book to Store" Margin="10"/>
-            <Button Content="Remove Book from Store" Margin="10"/>
             <Button Content="View All Books" Margin="10"
                       Command="{Binding OpenBookAdminCommand}"/>
         </StackPanel>

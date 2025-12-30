@@ -18,10 +18,11 @@
         
         
         <!-- DataGrid med böcker -->
-        <DataGrid ItemsSource="{Binding Books}" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False">
+        <DataGrid ItemsSource="{Binding Books}" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" FontSize="10">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ISBN-13" Binding="{Binding Isbn13}" IsReadOnly="True" Width="130"/>
-                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
+                <DataGridTextColumn Header="ISBN" Binding="{Binding Isbn13}" IsReadOnly="True" Width="130"/>
+                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="130"/>
+                <DataGridTextColumn Header="Author" Binding="{Binding AuthorNames}" IsReadOnly="True" Width="120"/>
                 <DataGridTextColumn Header="Genre" Binding="{Binding Genre}" IsReadOnly="True" Width="120"/>
                 <DataGridTextColumn Header="Language" Binding="{Binding Language}" Width="100"/>
                 <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=F2}" Width="80"/>

@@ -1,0 +1,28 @@
+﻿<Window x:Class="BookStore_Presentation.Dialogs.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BookStore_Presentation.Dialogs"
+         xmlns:viewmodels="clr-namespace:Labb2Database_applikation_relationsdatabas.VewModels"
+        mc:Ignorable="d"
+        Title="New book title" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+    <TextBlock Text="New title" />
+    <TextBox Grid.Row="0" Margin="0,20,0,10"
+    Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+             
+             
+    </Grid>
+</Window>

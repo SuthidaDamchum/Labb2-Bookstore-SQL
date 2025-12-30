@@ -202,6 +202,7 @@ namespace BookStore_Presentation.ViewModels
                         Price = i.Isbn13Navigation.Price ?? 0m,
                         Quantity = i.Quantity,
                         StoreId = i.StoreId
+
                     }).ToList()
             );
             RaisePropertyChanged(nameof(Inventory));

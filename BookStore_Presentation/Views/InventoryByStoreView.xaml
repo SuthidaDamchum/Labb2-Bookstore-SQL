@@ -66,9 +66,9 @@
             <DataGrid ItemsSource="{Binding Inventory}" SelectedItem="{Binding SelectedInventoryItem, Mode=TwoWay}" IsReadOnly="True" Grid.Column="1" AutoGenerateColumns="False" Margin="10,50,0,0">
          
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" />
+                    <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" />
                 <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
-                <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" />
             </DataGrid.Columns>
             
