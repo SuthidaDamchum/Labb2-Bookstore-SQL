@@ -10,7 +10,7 @@
 
 
 
-        <Grid Margin="10">
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
@@ -37,9 +37,11 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10,10,0,10" VerticalAlignment="Top">
                 <ComboBox ItemsSource="{Binding Books}" 
-              SelectedItem="{Binding SelectedBook}" 
-              DisplayMemberPath="Title"
-              Width="250" Margin="0,0,10,0" SelectedIndex="1" />
+                          SelectedItem="{Binding SelectedBook}" 
+                          IsTextSearchEnabled="true"
+                          IsEditable="true"
+                          DisplayMemberPath="Title"
+                          Width="250" Margin="0,0,10,0" SelectedIndex="1" />
 
                 <Button Content="Add Book to Store"
             Width="120"

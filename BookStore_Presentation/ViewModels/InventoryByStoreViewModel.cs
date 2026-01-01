@@ -13,16 +13,12 @@ namespace BookStore_Presentation.ViewModels
         private readonly BookStoreContext _context = new();
 
         private BooksAdminViewModel _bookCatalog;
-
         public ObservableCollection<BookAdminItem> Books => _bookCatalog.Books;
-
         public DelegateCommand IncreaseQuantityCommand { get; }
         public DelegateCommand DecreaseQuantityCommand { get; }
         public ICommand RemoveBookFromStoreCommand { get; }
-
         public ObservableCollection<Store> Stores { get; private set; }
         public ObservableCollection<InventoryItem> Inventory { get; private set; } = new();
-
 
         private BookAdminItem? _selectedBook;
         public BookAdminItem? SelectedBook
@@ -35,7 +31,6 @@ namespace BookStore_Presentation.ViewModels
                 ((DelegateCommand)AddBookToStoreCommand).RaiseCanExecuteChanged();
             }
         }
-
 
         private Store? _selectedStore;
         public Store? SelectedStore
@@ -63,7 +58,6 @@ namespace BookStore_Presentation.ViewModels
               
             }
         }
-
 
         public InventoryByStoreViewModel()
         {
@@ -115,7 +109,6 @@ namespace BookStore_Presentation.ViewModels
             );
         }
 
-
         public ICommand AddBookToStoreCommand { get; }
 
         private void AddBookToStore(BookAdminItem book)
@@ -140,9 +133,7 @@ namespace BookStore_Presentation.ViewModels
             }
             _context.SaveChanges();
             LoadInventory();
-             
         }
-
         private void RemoveBookFromStore(InventoryItem item)
         {
             if (SelectedStore == null || item == null) return;
@@ -150,15 +141,14 @@ namespace BookStore_Presentation.ViewModels
             var inventory = _context.Inventories
              .FirstOrDefault(i => i.Isbn13 == item.ISBN 
                                                       && i.StoreId == SelectedStore.StoreId);
-
             if (inventory != null)
             {
                 _context.Inventories.Remove(inventory);
                 _context.SaveChanges();
                 LoadInventory();
             }
-        }           
-
+        }    
+        
         private void UpdateQuantityInDatabase(InventoryItem item, int delta)
         {
             var inventory = _context.Inventories
@@ -168,7 +158,6 @@ namespace BookStore_Presentation.ViewModels
             {
                 inventory.Quantity = item.Quantity;
                 _context.SaveChanges();
-
                 // uppdatera UI
                 item.Quantity += delta;
             }
