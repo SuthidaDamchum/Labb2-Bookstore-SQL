@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using BookStore_Domain;
 using BookStore_Infrastrcuture.Data.Model;
 using BookStore_Presentation.ViewModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookStore_Presentation.Dialogs
 {
@@ -53,36 +41,52 @@ namespace BookStore_Presentation.Dialogs
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-         
-            if (string.IsNullOrWhiteSpace(TitleTextBox.Text) || string.IsNullOrWhiteSpace(IsbnTextBox.Text))
+
+            if (string.IsNullOrWhiteSpace(TitleTextBox.Text))
             {
-                MessageBox.Show("Title and ISBN are required.");
+                MessageBox.Show("Title is required.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-        
+            var isbn = IsbnTextBox.Text.Trim();
+            if (string.IsNullOrWhiteSpace(isbn) || !System.Text.RegularExpressions.Regex.IsMatch(isbn, @"^[0-9A-Za-z]+$"))
+            {
+                MessageBox.Show("ISBN is required and must be alphanumeric.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+
             var selectedAuthors = AuthorsListBox.SelectedItems.Cast<AuthorItem>().ToList();
             if (!selectedAuthors.Any())
             {
-                MessageBox.Show("Please select at least one author.");
+                MessageBox.Show("Please select at least one author.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
+                
 
             var language = LanguageComboBox.SelectedItem as string;
             if (string.IsNullOrEmpty(language))
             {
-                MessageBox.Show("Select a language.");
+                MessageBox.Show("Please select a language.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
- 
+
+            if (string.IsNullOrWhiteSpace(PriceTextBox.Text) 
+                            || !decimal.TryParse(PriceTextBox.Text, out var p))
+            {
+                MessageBox.Show("Price is required and must be a valid number.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            decimal price = p; // now guaranteed to be valid
+
             var newBook = new Book
             {
                 Isbn13 = IsbnTextBox.Text,
                 Title = TitleTextBox.Text,
                 Language = language,   //here is where assign the selected language
-                Price = decimal.TryParse(PriceTextBox.Text, out var p) ? p : null,
+                Price = price,
                 GenreId = (GenreComboBox.SelectedItem as Genre)?.GenreId,
                 BookAuthors = selectedAuthors.Select(a => new BookAuthor
                 {
@@ -96,8 +100,9 @@ namespace BookStore_Presentation.Dialogs
             _context.Books.Add(newBook);
             _context.SaveChanges();
 
-            MessageBox.Show("Book saved successfully!");
+            MessageBox.Show("Book saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             DialogResult = true;
+            Close();
         }
     }
 }
