@@ -7,7 +7,8 @@
         xmlns:viewmodels="clr-namespace:BookStore_Presentation.ViewModels"
         mc:Ignorable="d"
         Title="New Author" Height="260" Width="220"
-        WindowStartupLocation="CenterOwner" ResizeMode="CanResize"  >
+        WindowStartupLocation="CenterScreen"  ResizeMode="CanResize"     
+        d:DataContext="{d:DesignInstance Type=viewmodels:AuthorsAdminViewModel, IsDesignTimeCreatable=False}"> 
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
