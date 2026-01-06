@@ -17,7 +17,7 @@ namespace BookStore_Presentation.Dialogs
         private readonly BooksAdminViewModel _viewModel;
         private ObservableCollection<AuthorItem> _authors;
 
-        // Receive existing ViewModel
+
         public AddNewTitle(BooksAdminViewModel viewModel)
         {
             InitializeComponent();
@@ -86,13 +86,13 @@ namespace BookStore_Presentation.Dialogs
                 return;
             }
 
-            decimal price = p; // now guaranteed to be valid
+            decimal price = p;
 
             var newBook = new Book
             {
                 Isbn13 = IsbnTextBox.Text,
                 Title = TitleTextBox.Text,
-                Language = language,   //here is where assign the selected language
+                Language = language,  
                 Price = price,
                 GenreId = (GenreComboBox.SelectedItem as Genre)?.GenreId,
                 BookAuthors = selectedAuthors.Select(a => new BookAuthor
