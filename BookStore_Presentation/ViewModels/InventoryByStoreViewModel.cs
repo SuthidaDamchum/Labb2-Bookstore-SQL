@@ -3,6 +3,7 @@ using System.Windows.Input;
 using BookStore_Domain;
 using BookStore_Infrastrcuture.Data.Model;
 using BookStore_Presentation.Command;
+using BookStore_Presentation.Models;
 using BookStore_Presentation.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ namespace BookStore_Presentation.ViewModels
         private readonly BookSelectionService _selectionService;
         private readonly BookStoreContext _context = new();
         private readonly BooksAdminViewModel _bookCatalog;
+        public ObservableCollection<BookAdminItem> AvailableBooks { get; private set; }
 
         public ObservableCollection<BookAdminItem> Books => _bookCatalog.Books;
 
@@ -108,7 +110,7 @@ namespace BookStore_Presentation.ViewModels
 
         private void AddBookToStore(BookAdminItem book)
         {
-            if (SelectedStore == null) return;
+            if (SelectedStore == null || book == null) return;
 
             var inventory = _context.Inventories
                 .FirstOrDefault(i => i.Isbn13 == book.Isbn13 && i.StoreId == SelectedStore.StoreId);
@@ -171,7 +173,7 @@ namespace BookStore_Presentation.ViewModels
             if (SelectedStore == null) return;
 
             Inventory = new ObservableCollection<InventoryItem>(
-                _context.Inventories
+                 _context.Inventories
                     .Include(i => i.Isbn13Navigation)
                     .Where(i => i.StoreId == SelectedStore.StoreId)
                     .Select(i => new InventoryItem
@@ -183,6 +185,16 @@ namespace BookStore_Presentation.ViewModels
                         StoreId = i.StoreId
                     }).ToList()
             );
+
+            //Filtera böcker som redan finns i butiker
+            var inventoryIsbns = Inventory.Select(item => item.ISBN).ToHashSet();
+            AvailableBooks = new ObservableCollection<BookAdminItem>(
+                _bookCatalog.Books
+                    .Where(b => !inventoryIsbns.Contains(b.Isbn13))
+                    .ToList()
+            );
+
+            RaisePropertyChanged(nameof(AvailableBooks));
             RaisePropertyChanged(nameof(Inventory));
         }
     }
