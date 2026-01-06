@@ -10,16 +10,16 @@ using BookStore_Presentation.ViewModels;
 namespace BookStore_Presentation.Dialogs
 {
     /// <summary>
-    /// Interaction logic for AddNewTitle.xaml
+    /// Interaction logic for AddNewTitleDailog.xaml
     /// </summary>
-    public partial class AddNewTitle : Window
+    public partial class AddNewTitleDailog : Window
     {
         private readonly BookStoreContext _context;
         private readonly BooksAdminViewModel _viewModel;
         private ObservableCollection<AuthorItem> _authors;
 
 
-        public AddNewTitle(BooksAdminViewModel viewModel)
+        public AddNewTitleDailog(BooksAdminViewModel viewModel)
         {
             InitializeComponent();
 
@@ -31,7 +31,7 @@ namespace BookStore_Presentation.Dialogs
 
 
             GenreComboBox.ItemsSource = _context.Genres.ToList();
-
+            PublisherComboBox.ItemsSource = _context.Publishers.ToList();
 
             _authors = new ObservableCollection<AuthorItem>(
                 _context.Authors.Select(a => new AuthorItem
@@ -117,7 +117,7 @@ namespace BookStore_Presentation.Dialogs
                 GenreId = (GenreComboBox.SelectedItem as Genre)?.GenreId,
                 PublicationDate = publicationDate,
                 PageCount = pageCount,
-
+                PublisherId=(PublisherComboBox.SelectedItem as Publisher)?.PublisherId,
                 BookAuthors = selectedAuthors.Select(a => new BookAuthor
                 {
                     AuthorId = a.AuthorId,

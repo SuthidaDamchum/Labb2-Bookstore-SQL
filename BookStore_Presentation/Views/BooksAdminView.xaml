@@ -88,14 +88,15 @@
                   SelectedItem="{Binding SelectedBook, Mode=TwoWay}">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ISBN" Binding="{Binding Isbn13}" Width="120"/>
-                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="150"/>
-                <DataGridTextColumn Header="Author" Binding="{Binding AuthorNames}" Width="150"/>
-                <DataGridTextColumn Header="Genre" Binding="{Binding Genre}" Width="120"/>
-                <DataGridTextColumn Header="Language" Binding="{Binding Language}" Width="100"/>
-                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=F2}" Width="80"/>
-                <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate}" Width="100"/>
-                <DataGridTextColumn Header="Pages" Binding="{Binding PageCount}" Width="100"/>
+                <DataGridTextColumn Header="ISBN-13" Binding="{Binding Isbn13}" Width="Auto"/>
+                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="Auto"/>
+                <DataGridTextColumn Header="Author" Binding="{Binding AuthorNames}" Width="Auto"/>
+                <DataGridTextColumn Header="Genre" Binding="{Binding Genre}" Width="Auto"/>
+                <DataGridTextColumn Header="Language" Binding="{Binding Language}" Width="Auto"/>
+                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=F2}" Width="Auto"/>
+                <DataGridTextColumn Header="Published" Binding="{Binding PublicationDate}" Width="Auto"/>
+                <DataGridTextColumn Header="Pages" Binding="{Binding PageCount}" Width="Auto"/>
+                <DataGridTextColumn Header="Publisher" Binding="{Binding Publisher}" Width="Auto"/>
 
             </DataGrid.Columns>
         </DataGrid>

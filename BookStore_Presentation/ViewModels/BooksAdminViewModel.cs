@@ -82,7 +82,7 @@ namespace BookStore_Presentation.ViewModels
 
         private void OpenAddBookDialog()
         {
-            var dialog = new AddNewTitle(this); // pass the current ViewModel
+            var dialog = new AddNewTitleDailog(this); // pass the current ViewModel
 
             if (dialog.ShowDialog() == true)
             {
@@ -102,29 +102,33 @@ namespace BookStore_Presentation.ViewModels
         private List<BookAdminItem> LoadBooks()
         {
             return _context.Books
+                .AsNoTracking()
            .Include(b => b.Genre)
+           .Include(b => b.Publisher)
            .Include(b => b.BookAuthors)
                .ThenInclude(ba => ba.Author)
            .Select(b => new BookAdminItem
            {
                Isbn13 = b.Isbn13,
                Title = b.Title,
+
                AuthorNames = string.Join(", ",
                b.BookAuthors.Select(ba =>
                ba.Author.FirstName + " " + ba.Author.LastName)),
-               Genre = b.Genre != null ? b.Genre.GenreName : "",
+
+               GenreName = b.Genre != null ? b.Genre.GenreName : string.Empty,
+
                Language = b.Language,
                Price = b.Price ?? 0m,
                PublicationDate = b.PublicationDate,
-               PageCount = b.PageCount
+               PageCount = b.PageCount,
+
+               PublisherName = b.Publisher != null? b.Publisher.PublisherName : "",
 
 
            })
            .ToList();
         }
-
-
-
 
 
         public List<string> LanguageOptions { get; } = new List<string>
@@ -135,7 +139,7 @@ namespace BookStore_Presentation.ViewModels
         public void CreateNewBookTitle
          (
             string isbn13, string title, int? genreId,
-            string language, decimal price, DateOnly? publicationdate, int pagecount,  List<int> existingAuthorIds
+            string language, decimal price, DateOnly? publicationdate, int pagecount, int? publisherId, List<int> existingAuthorIds
          )
 
         {
@@ -157,6 +161,7 @@ namespace BookStore_Presentation.ViewModels
                 Price = price,
                 PublicationDate = publicationdate,
                 PageCount = pagecount,
+                PublisherId = publisherId,
 
 
                 BookAuthors = authors.Select(a => new BookAuthor
@@ -178,16 +183,28 @@ namespace BookStore_Presentation.ViewModels
                 }
             }
 
+            string publisherName = "";
+            if (publisherId != null)
+            {
+                var publisher = _context.Publishers.Find(publisherId);
+                if(publisher != null)
+                {
+                    publisherName = publisher.PublisherName;
+                }
+            }
+
+
             Books.Add(new BookAdminItem
             {
                 Isbn13 = newBookTitle.Isbn13,
                 Title = newBookTitle.Title,
                 AuthorNames = string.Join(", ", authors.Select(a => $"{a.FirstName} {a.LastName}")),
-                Genre = newBookTitle.Genre != null ? newBookTitle.Genre.GenreName : "",
+                GenreName = genreName,
                 Language = newBookTitle.Language,
                 Price = newBookTitle.Price ?? 0m,
                 PublicationDate = newBookTitle.PublicationDate,
-                PageCount = newBookTitle.PageCount
+                PageCount = newBookTitle.PageCount,
+                PublisherName = publisherName
 
             });
             RaisePropertyChanged(nameof(Books));
@@ -196,9 +213,6 @@ namespace BookStore_Presentation.ViewModels
         private void EditNewBookTitle()
         {
             if(SelectedBook == null) return;
-
-            
-
 
         }
 
@@ -253,6 +267,9 @@ namespace BookStore_Presentation.ViewModels
         }
     }
 }
+
+
+
 
 
 
