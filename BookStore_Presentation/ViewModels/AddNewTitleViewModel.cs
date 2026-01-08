@@ -42,48 +42,48 @@ namespace BookStore_Presentation.ViewModels
             LanguageOptions = new List<string> { "English", "Swedish", "Norwegian", "French", "Spanish", "Danish", "German" };
 
             // Commands
-            SaveCommand = new DelegateCommand(Save);
-            EditCommand = new DelegateCommand(Edit);
-            CancelCommand = new DelegateCommand(Cancel);
+            SaveCommand = new AsyncDelegateCommand(Save);
+            EditCommand = new AsyncDelegateCommand(Edit);
+            CancelCommand = new AsyncDelegateCommand(Cancel);
         }
 
-            #region Properties
+        #region Properties
 
-            public string Title { get; set; } = "";
-            public string ISBN { get; set; } = "";
-            public string? Language { get; set; }
-            public string? PriceText { get; set; }
-            public string? PublicationDateText { get; set; }
-            public string? PageCountText { get; set; }
+        public string Title { get; set; } = "";
+        public string ISBN { get; set; } = "";
+        public string? Language { get; set; }
+        public string? PriceText { get; set; }
+        public string? PublicationDateText { get; set; }
+        public string? PageCountText { get; set; }
 
-            public Genre? SelectedGenre { get; set; }
-            public Publisher? SelectedPublisher { get; set; }
+        public Genre? SelectedGenre { get; set; }
+        public Publisher? SelectedPublisher { get; set; }
 
-            public List<string> LanguageOptions { get; set; }
-            public List<Genre> Genres { get; set; }
-            public List<Publisher> Publishers { get; set; }
+        public List<string> LanguageOptions { get; set; }
+        public List<Genre> Genres { get; set; }
+        public List<Publisher> Publishers { get; set; }
 
-            private ObservableCollection<AuthorItem> _authors = new();
-            public ObservableCollection<AuthorItem> Authors
-            {
-                get => _authors;
-                set { _authors = value; RaisePropertyChanged(); }
-            }
+        private ObservableCollection<AuthorItem> _authors = new();
+        public ObservableCollection<AuthorItem> Authors
+        {
+            get => _authors;
+            set { _authors = value; RaisePropertyChanged(); }
+        }
 
-            public List<AuthorItem> SelectedAuthors => Authors.Where(a => a.IsSelected).ToList();
-            public string SelectedAuthorsText => string.Join(", ", SelectedAuthors.Select(a => a.FullName));
+        public List<AuthorItem> SelectedAuthors => Authors.Where(a => a.IsSelected).ToList();
+        public string SelectedAuthorsText => string.Join(", ", SelectedAuthors.Select(a => a.FullName));
 
-            public ICommand SaveCommand { get; }
-            public ICommand EditCommand { get; }
-            public ICommand CancelCommand { get; }
+        public ICommand SaveCommand { get; }
+        public ICommand EditCommand { get; }
+        public ICommand CancelCommand { get; }
 
-            #endregion
+        #endregion
 
-            #region Methods
+        #region Methods
 
-            /// <summary>
-            /// Load data from existing book (for edit)
-            /// </summary>
+        /// <summary>
+        /// Load data from existing book (for edit)
+        /// </summary>
         public void LoadFromBook(BookAdminItem book)
         {
             if (book == null) return;
@@ -103,7 +103,7 @@ namespace BookStore_Presentation.ViewModels
                 author.IsSelected = book.AuthorIds.Contains(author.AuthorId);
         }
 
-        private void Save(object? parameter)
+        private async Task Save(object? parameter)
         {
             if (!ValidateInput()) return;
 
@@ -146,7 +146,7 @@ namespace BookStore_Presentation.ViewModels
             };
 
             _context.Books.Add(newBook);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             MessageBox.Show("Book saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -154,11 +154,11 @@ namespace BookStore_Presentation.ViewModels
                 window.DialogResult = true;
         }
 
-        private void Edit(object? parameter)
+        private async Task Edit(object? parameter)
         {
             if (!ValidateInput()) return;
 
-            var book = _context.Books.Include(b => b.BookAuthors).FirstOrDefault(b => b.Isbn13 == ISBN);
+            var book = await _context.Books.Include(b => b.BookAuthors).FirstOrDefaultAsync(b => b.Isbn13 == ISBN);
             if (book == null)
             {
                 MessageBox.Show("Book not found.");
@@ -197,25 +197,25 @@ namespace BookStore_Presentation.ViewModels
             foreach (var id in selectedIds.Where(i => !book.BookAuthors.Any(ba => ba.AuthorId == i)))
                 book.BookAuthors.Add(new BookAuthor { AuthorId = id, BookIsbn13 = book.Isbn13, Role = "Main Author" });
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             if (parameter is Window window)
                 window.DialogResult = true;
         }
 
-                private void Cancel(object? parameter)
-                {
-                    if (parameter is Window window)
-                        window.DialogResult = false;
-                }
+        private async Task Cancel(object? parameter)
+        {
+            if (parameter is Window window)
+                window.DialogResult = false;
+        }
 
-                private void OnAuthorSelectionChanged(object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName == nameof(AuthorItem.IsSelected))
-                        RaisePropertyChanged(nameof(SelectedAuthorsText));
-                }
+        private void OnAuthorSelectionChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(AuthorItem.IsSelected))
+                RaisePropertyChanged(nameof(SelectedAuthorsText));
+        }
 
-                private bool ValidateInput()
+        private bool ValidateInput()
         {
             if (string.IsNullOrWhiteSpace(Title))
             {
