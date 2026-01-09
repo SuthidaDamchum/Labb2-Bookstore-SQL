@@ -10,11 +10,11 @@ using BookStore_Presentation.ViewModels;
 namespace BookStore_Presentation.Dialogs
 {
     /// <summary>
-    /// Interaction logic for AddNewTitleDailog.xaml
+    /// Interaction logic for AddNewTitleDialog.xaml
     /// </summary>
-    public partial class AddNewTitleDailog : Window
+    public partial class AddNewTitleDialog : Window
     {
-        public AddNewTitleDailog(AddNewTitleViewModel viewModel)
+        public AddNewTitleDialog(AddNewTitleViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;

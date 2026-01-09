@@ -1,4 +1,4 @@
-﻿<Window x:Class="BookStore_Presentation.Dialogs.AddNewTitleDailog"
+﻿<Window x:Class="BookStore_Presentation.Dialogs.AddNewTitleDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,72 +6,99 @@
         xmlns:local="clr-namespace:BookStore_Presentation.Dialogs"
         xmlns:viewmodels="clr-namespace:BookStore_Presentation.ViewModels"
         mc:Ignorable="d"
-        Title="New book title" Height="530" Width="310"
-         WindowStartupLocation="CenterScreen"
+        Title="New Book Title" Height="550" Width="380"
+        WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
+        Background="#FAFAFA"
         d:DataContext="{d:DesignInstance Type=viewmodels:AddNewTitleViewModel, IsDesignTimeCreatable=True}">
 
-    <Grid Margin="10">
+    <Grid Margin="24">
         <Grid.RowDefinitions>
-            <RowDefinition Height="599*"/>
-            <RowDefinition Height="75*"/>
-
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Margin="0,10,0,0" VerticalAlignment="Top">
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="20" BorderBrush="#DDD" BorderThickness="1" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="150" />
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Title:"/>
-            <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Margin="0,10,0,10"/>
+                <TextBlock Text="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
+                <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1" Margin="0,0,0,8"/>
 
+             
+                <TextBlock Text="ISBN:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
+                <TextBox Text="{Binding ISBN, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,0,0,8"/>
 
-            <TextBlock Text="ISBN:"/>
-            <TextBox Text="{Binding ISBN, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+                <TextBlock Text="Authors:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" Margin="0,0,8,8"/>
+                <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,0,8">
+                    <Border BorderBrush="#CCC" BorderThickness="1" CornerRadius="4" Padding="4" Background="#F5F5F5">
+                        <ScrollViewer MaxHeight="120" VerticalScrollBarVisibility="Auto">
+                            <ListBox ItemsSource="{Binding Authors}" SelectionMode="Multiple" BorderThickness="0" Background="Transparent">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding FullName}" 
+                                                  IsChecked="{Binding IsSelected, Mode=TwoWay}" 
+                                                  VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
+                    </Border>
+                    <TextBlock Text="{Binding SelectedAuthorsText}" FontStyle="Italic" Foreground="Gray" Margin="0,4,0,0"/>
+                </StackPanel>
 
-            <TextBlock Text="Authors:" Margin="0,10,0,0"/>
-            <TextBlock Text="{Binding SelectedAuthorsText}" Margin="0,0,0,10"/>
-            <ComboBox x:Name="AuthorsComboBox"
-          ItemsSource="{Binding Authors}"
-          IsEditable="False"
-          MaxDropDownHeight="200">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Content="{Binding FullName}"
-                      IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+                <TextBlock Text="Language:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
+                <ComboBox ItemsSource="{Binding LanguageOptions}" SelectedItem="{Binding Language}" Grid.Row="3" Grid.Column="1" Margin="0,0,0,8"/>
 
+        
+                <TextBlock Text="Price:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
+                <TextBox Text="{Binding PriceText, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="1" Margin="0,0,0,8"/>
 
-            <TextBlock Text="Language:"/>
-            <ComboBox ItemsSource="{Binding LanguageOptions}" SelectedItem="{Binding Language}" Margin="0,0,0,10"/>
+        
+                <TextBlock Text="Genre:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
+                <ComboBox ItemsSource="{Binding Genres}" DisplayMemberPath="GenreName" SelectedItem="{Binding SelectedGenre}" Grid.Row="5" Grid.Column="1" Margin="0,0,0,8"/>
 
+                <TextBlock Text="Publication Date:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
+                <StackPanel Grid.Row="6" Grid.Column="1" Margin="0,0,0,8">
+                    <TextBox Text="{Binding PublicationDateText, UpdateSourceTrigger=PropertyChanged}" 
+                             ToolTip="Enter date as YYYY-MM-DD"/>
+                    <TextBlock Text="Ex: 2024-05-01" 
+                               FontSize="11" 
+                               Foreground="Gray" 
+                               Margin="2,2,0,0"/>
+                </StackPanel>
 
-            <TextBlock Text="Price:"/>
-            <TextBox Text="{Binding PriceText, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+                <TextBlock Text="Pages:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
+                <TextBox Text="{Binding PageCountText, UpdateSourceTrigger=PropertyChanged}" Grid.Row="7" Grid.Column="1" Margin="0,0,0,8" ToolTip="Enter number of pages"/>
 
+                <TextBlock Text="Publisher:" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
+                <ComboBox ItemsSource="{Binding Publishers}" DisplayMemberPath="PublisherName" SelectedItem="{Binding SelectedPublisher}" Grid.Row="8" Grid.Column="1" Margin="0,0,0,8"/>
+            </Grid>
+        </Border>
 
-            <TextBlock Text="Genre:"/>
-            <ComboBox ItemsSource="{Binding Genres}" DisplayMemberPath="GenreName" SelectedItem="{Binding SelectedGenre}" Margin="0,0,0,10"/>
-
-
-            <TextBlock Text="Publication Date (YYYY-MM-DD):"/>
-            <TextBox Text="{Binding PublicationDateText, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10" ToolTip="Enter date as YYYY-MM-DD"/>
-
-
-            <TextBlock Text="Pages:"/>
-            <TextBox Text="{Binding PageCountText, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10" ToolTip="Enter number of pages"/>
-
-
-            <TextBlock Text="Publisher:"/>
-            <ComboBox ItemsSource="{Binding Publishers}" DisplayMemberPath="PublisherName" SelectedItem="{Binding SelectedPublisher}" Margin="0,0,0,10"/>
-        </StackPanel>
-
-        <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,15,0,0" Grid.Row="1">
-            <Button Content="Save" Width="100" Margin="0,0,10,0" Command="{Binding SaveCommand}"  
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
-
-            <Button Content="Cancel" Width="100" Command="{Binding CancelCommand}"   
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+       
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <Button Content="Save" Width="120" Margin="0,0,16,0" Command="{Binding SaveCommand}"  
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+            <Button Content="Cancel" Width="120" Command="{Binding CancelCommand}"   
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
         </StackPanel>
     </Grid>
 </Window>

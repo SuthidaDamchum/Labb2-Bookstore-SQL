@@ -5,12 +5,15 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using BookStore_Presentation.ViewModels;
 
 namespace BookStore_Presentation.Models
 {
     public class AuthorItem : ViewModelBase
     {
+
+
         public int AuthorId { get; set; }
 
         private string _fullName = "";
@@ -34,18 +37,23 @@ namespace BookStore_Presentation.Models
             set { _booksCount = value; RaisePropertyChanged(); }
         }
 
-        private bool _isSelected = false;
+        private bool _isSelected;
         public bool IsSelected
         {
             get => _isSelected;
             set
             {
-                _isSelected = value; RaisePropertyChanged();
+                if (_isSelected == value) return;
+                _isSelected = value;
+                 RaisePropertyChanged();
+                SelectionChanged?.Invoke();
                 RaisePropertyChanged(nameof(IsSelected));
             }
         }
+        public Action? SelectionChanged { get; set; }
     }
 }
+
 
 
 
