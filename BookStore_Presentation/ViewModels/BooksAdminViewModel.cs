@@ -38,23 +38,23 @@ namespace BookStore_Presentation.ViewModels
             _selectionService = selectionService;
             _context = new BookStoreContext();
 
-           
+
             Genres = _context.Genres.AsNoTracking().ToList();
             Publishers = _context.Publishers.AsNoTracking().ToList();
 
             Books = new ObservableCollection<BookAdminItem>(LoadBooks());
 
-            CreateNewBookTitleCommand = new DelegateCommand(_ => OpenAddBookDialog());
+            CreateNewBookTitleCommand = new AsyncDelegateCommand(async _=> await OpenAddBookDialog());
 
-            CreateNewAuthorCommand = new DelegateCommand(_ => OpenAddNewAuthorDialog());
+            CreateNewAuthorCommand = new DelegateCommand(async _=> await OpenAddNewAuthorDialogAsync());
 
-            EditNewBookTitleCommand = new DelegateCommand(
-                _=> EditNewBookTitle(), 
-                _=> SelectedBook != null);
+            EditNewBookTitleCommand = new AsyncDelegateCommand(
+              async  _ => await EditNewBookTitleAsync(),
+                _ => SelectedBook != null);
 
 
-            DeleteBookFromInventoryCommand = new DelegateCommand(
-               param =>
+            DeleteBookFromInventoryCommand = new AsyncDelegateCommand(
+             async param =>
                 {
                     if (param is BookAdminItem book)
                     {
@@ -69,14 +69,13 @@ namespace BookStore_Presentation.ViewModels
                         if (result == MessageBoxResult.Yes)
                         {
 
-                            DeleteBookFromInventory(book);
+                            await DeleteBookFromInventoryAsync(book);
 
-
-                            ReloadBooks();
+                            await ReloadBooksAsyns();
                         }
-                    }   
+                    }
                 },
-                  param => param is BookAdminItem 
+                  param => param is BookAdminItem
           );
         }
 
@@ -87,12 +86,12 @@ namespace BookStore_Presentation.ViewModels
             {
                 _selectionService.SelectedBook = value;
                 RaisePropertyChanged();
-                ((DelegateCommand)EditNewBookTitleCommand).RaiseCanExecuteChanged();
-                ((DelegateCommand)DeleteBookFromInventoryCommand).RaiseCanExecuteChanged();
+                ((AsyncDelegateCommand)EditNewBookTitleCommand).RaiseCanExecuteChanged();
+                ((AsyncDelegateCommand)DeleteBookFromInventoryCommand).RaiseCanExecuteChanged();
             }
         }
 
-        private void OpenAddBookDialog()
+        private async Task OpenAddBookDialog()
         {
 
             var addNewTitleViewModel = new AddNewTitleViewModel();
@@ -100,18 +99,40 @@ namespace BookStore_Presentation.ViewModels
 
             if (dialog.ShowDialog() == true)
             {
-                ReloadBooks();
+               await ReloadBooksAsyns();
             }
         }
 
-        private void ReloadBooks()
+        private async Task ReloadBooksAsyns()
         {
             Books.Clear();
-            foreach (var book 
-                in LoadBooks())
+
+            var books = await _context.Books
+                .AsNoTracking()
+                .Include(b => b.Genre)
+                .Include(b => b.Publisher)
+                .Include(b => b.BookAuthors)
+                     .ThenInclude(ba => ba.Author)
+                .ToListAsync();
+
+            foreach (var b in books)
             {
-                Books.Add(book);
+                Books.Add(new BookAdminItem
+
+                {
+                    Isbn13 = b.Isbn13,
+                    Title = b.Title,
+                    Language = b.Language,
+                    Price = b.Price ?? 0m,
+                    PublicationDate = b.PublicationDate,
+                    GenreName = b.Genre?.GenreName ?? "",
+                    PublisherName = b.Publisher?.PublisherName ?? "",
+                    AuthorIds = b.BookAuthors.Select(ba => ba.AuthorId).ToArray(),
+                    AuthorNameString = string.Join(" ,", b.BookAuthors.Select(ba => ba.Author.FirstName + " " + ba.Author.LastName ))
+
+                });
             }
+            RaisePropertyChanged(nameof(Books));
         }
 
         private List<BookAdminItem> LoadBooks()
@@ -226,78 +247,78 @@ namespace BookStore_Presentation.ViewModels
             RaisePropertyChanged(nameof(Books));
         }
 
-                    private void EditNewBookTitle()
+        private async Task EditNewBookTitleAsync()
+        {
+            if (SelectedBook == null)
+                return;
+
+            var viewModel = new AddNewTitleViewModel();
+            viewModel.LoadFromBook(SelectedBook);
+
+            var dialog = new EditNewTitleDialog
             {
-                if (SelectedBook == null)
-                    return;
+                DataContext = viewModel,
+                //Owner = Application.Current.MainWindow
+            };  
 
-                var viewModel = new AddNewTitleViewModel();
-                viewModel.LoadFromBook(SelectedBook);
+            if (dialog.ShowDialog() != true)
+                return;
 
-                var dialog = new EditNewTitleDialog
-                {
-                    DataContext = viewModel,
-                    Owner = Application.Current.MainWindow
-                };
 
-                if (dialog.ShowDialog() != true)
-                    return;
+            using var context = new BookStoreContext();
 
-       
-                using var context = new BookStoreContext();
+            var updatedBook = await context.Books
+                .AsNoTracking()
+                .Include(b => b.BookAuthors)
+                    .ThenInclude(ba => ba.Author)
+                .Include(b => b.Genre)
+                .Include(b => b.Publisher)
+                .FirstOrDefaultAsync(b => b.Isbn13 == SelectedBook.Isbn13);
 
-                var updatedBook = context.Books
-                    .AsNoTracking()
-                    .Include(b => b.BookAuthors)
-                        .ThenInclude(ba => ba.Author)
-                    .Include(b => b.Genre)
-                    .Include(b => b.Publisher)
-                    .FirstOrDefault(b => b.Isbn13 == SelectedBook.Isbn13);
-
-                if (updatedBook == null)
-                {
-                    MessageBox.Show("Could not reload updated book.", "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-        
-                SelectedBook.Title = updatedBook.Title;
-                SelectedBook.Language = updatedBook.Language;
-                SelectedBook.Price = updatedBook.Price ?? 0m;
-                SelectedBook.PublicationDate = updatedBook.PublicationDate;
-                SelectedBook.PageCount = updatedBook.PageCount;
-                SelectedBook.GenreName = updatedBook.Genre?.GenreName ?? "";
-                SelectedBook.PublisherName = updatedBook.Publisher?.PublisherName ?? "";
-                SelectedBook.AuthorIds = updatedBook.BookAuthors
-                    .Select(ba => ba.AuthorId)
-                    .ToArray();
-
-                SelectedBook.AuthorNameString = string.Join(", ",
-                    updatedBook.BookAuthors.Select(ba =>
-                        ba.Author.FirstName + " " + ba.Author.LastName));
-
-                SelectedBook.RaisePropertyChanged(nameof(SelectedBook.Title));
-                SelectedBook.RaisePropertyChanged(nameof(SelectedBook.Language));
-                SelectedBook.RaisePropertyChanged(nameof(SelectedBook.Price));
-                SelectedBook.RaisePropertyChanged(nameof(SelectedBook.PublicationDate));
-                SelectedBook.RaisePropertyChanged(nameof(SelectedBook.PageCount));
-                SelectedBook.RaisePropertyChanged(nameof(SelectedBook.GenreName));
-                SelectedBook.RaisePropertyChanged(nameof(SelectedBook.PublisherName));
-                SelectedBook.RaisePropertyChanged(nameof(SelectedBook.AuthorNameString));
+            if (updatedBook == null)
+            {
+                MessageBox.Show("Could not reload updated book.", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
 
-        public void DeleteBookFromInventory(BookAdminItem bookItem)
+
+            SelectedBook.Title = updatedBook.Title;
+            SelectedBook.Language = updatedBook.Language;
+            SelectedBook.Price = updatedBook.Price ?? 0m;
+            SelectedBook.PublicationDate = updatedBook.PublicationDate;
+            SelectedBook.PageCount = updatedBook.PageCount;
+            SelectedBook.GenreName = updatedBook.Genre?.GenreName ?? "";
+            SelectedBook.PublisherName = updatedBook.Publisher?.PublisherName ?? "";
+            SelectedBook.AuthorIds = updatedBook.BookAuthors
+                .Select(ba => ba.AuthorId)
+                .ToArray();
+
+            SelectedBook.AuthorNameString = string.Join(", ",
+                updatedBook.BookAuthors.Select(ba =>
+                    ba.Author.FirstName + " " + ba.Author.LastName));
+
+            SelectedBook.RaisePropertyChanged(nameof(SelectedBook.Title));
+            SelectedBook.RaisePropertyChanged(nameof(SelectedBook.Language));
+            SelectedBook.RaisePropertyChanged(nameof(SelectedBook.Price));
+            SelectedBook.RaisePropertyChanged(nameof(SelectedBook.PublicationDate));
+            SelectedBook.RaisePropertyChanged(nameof(SelectedBook.PageCount));
+            SelectedBook.RaisePropertyChanged(nameof(SelectedBook.GenreName));
+            SelectedBook.RaisePropertyChanged(nameof(SelectedBook.PublisherName));
+            SelectedBook.RaisePropertyChanged(nameof(SelectedBook.AuthorNameString));
+        }
+
+        public async Task DeleteBookFromInventoryAsync(BookAdminItem bookItem)
         {
             if (bookItem == null) return;
 
-            var book = _context.Books
+
+            var book = await _context.Books
                 .Include(b => b.BookAuthors)
-                .FirstOrDefault(b => b.Isbn13 == bookItem.Isbn13);
+                .FirstOrDefaultAsync(b => b.Isbn13 == bookItem.Isbn13);
 
             if (book != null)
             {
-   
                 if (book.BookAuthors.Any())
                 {
                     _context.BookAuthors.RemoveRange(book.BookAuthors);
@@ -306,17 +327,17 @@ namespace BookStore_Presentation.ViewModels
                 var inventories = _context.Inventories.Where(i => i.Isbn13 == book.Isbn13);
                 _context.Inventories.RemoveRange(inventories);
 
-       
+
                 _context.Books.Remove(book);
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 Books.Remove(bookItem);
                 RaisePropertyChanged(nameof(Books));
             }
         }
 
-        private void OpenAddNewAuthorDialog()
+        private async Task OpenAddNewAuthorDialogAsync()
         {
             var dialog = new AddNewAuthorDialog
             {
@@ -329,7 +350,7 @@ namespace BookStore_Presentation.ViewModels
             var dto = dialog.Author;
             if (dto == null) return;
 
-            var newAuthor = _authorService.CreateAuthor(dto.FirstName, dto.LastName, dto.BirthDay);
+            var newAuthor = await _authorService.CreateAuthorAsync(dto.FirstName, dto.LastName, dto.BirthDay);
 
             if (SelectedBook != null && newAuthor != null)
             {
@@ -340,7 +361,7 @@ namespace BookStore_Presentation.ViewModels
                     Role = "Main Author"
                 };
                 _context.BookAuthors.Add(bookAuthor);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
         }
