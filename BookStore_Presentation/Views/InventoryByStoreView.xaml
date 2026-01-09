@@ -8,12 +8,47 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=UI:InventoryByStoreViewModel, IsDesignTimeCreatable=False}">
 
+    <UserControl.Resources>
+        <Style x:Key="ToolbarButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="#EEE"/>
+            <Setter Property="BorderBrush" Value="#CCC"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#DDD"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#CCC"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#F5F5F5"/>
+                                <Setter Property="Foreground" Value="#AAA"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
 
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
-            <!-- LEFT NAV -->
             <ColumnDefinition Width="220"/>
-            <!-- MAIN CONTENT -->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -25,7 +60,6 @@
                 BorderThickness="1">
 
             <StackPanel>
-
                 <TextBlock Text="Stores"
                            FontSize="16"
                            FontWeight="SemiBold"
@@ -45,16 +79,14 @@
 
                 <Button Content="➕ Increase Quantity"
                         Margin="0,0,0,6"
-                        Padding="8"
+                        Style="{StaticResource ToolbarButtonStyle}"
                         Command="{Binding IncreaseQuantityCommand}"/>
 
                 <Button Content="➖ Decrease Quantity"
-                        Padding="8"
+                        Style="{StaticResource ToolbarButtonStyle}"
                         Command="{Binding DecreaseQuantityCommand}"/>
-
             </StackPanel>
         </Border>
-
 
         <Grid Grid.Column="1" Margin="15,0,0,0">
             <Grid.RowDefinitions>
@@ -62,7 +94,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- ADD BOOK SECTION -->
             <Border Grid.Row="0"
                     Padding="12"
                     CornerRadius="6"
@@ -72,7 +103,6 @@
                     Margin="0,0,0,12">
 
                 <StackPanel>
-
                     <TextBlock Text="Add Books to Store"
                                FontSize="16"
                                FontWeight="SemiBold"
@@ -90,19 +120,17 @@
                         <Button Content="➕ Add to Store"
                                 Width="140"
                                 Margin="0,0,8,0"
-                                Padding="8"
+                                Style="{StaticResource ToolbarButtonStyle}"
                                 Command="{Binding AddBookToStoreCommand}"/>
 
                         <Button Content="🗑 Remove from Store"
                                 Width="160"
-                                Padding="8"
+                                Style="{StaticResource ToolbarButtonStyle}"
                                 Command="{Binding RemoveBookFromStoreCommand}"/>
                     </StackPanel>
-
                 </StackPanel>
             </Border>
 
-            <!-- INVENTORY GRID -->
             <Border Grid.Row="1"
                     Padding="8"
                     CornerRadius="6"
@@ -125,9 +153,7 @@
                         <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
-
             </Border>
-
         </Grid>
     </Grid>
-</UserControl>
+</UserControl>  

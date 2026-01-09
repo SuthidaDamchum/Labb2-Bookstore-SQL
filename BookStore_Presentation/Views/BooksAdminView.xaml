@@ -3,45 +3,42 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              xmlns:local="clr-namespace:BookStore_Presentation.Views" 
              xmlns:viewmodels="clr-namespace:BookStore_Presentation.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="450" d:DesignWidth="900"
              d:DataContext="{d:DesignInstance Type=viewmodels:BooksAdminViewModel, IsDesignTimeCreatable=False}">
 
     <UserControl.Resources>
         <Style x:Key="ToolbarButtonStyle" TargetType="Button">
-            <Setter Property="Margin" Value="0,0,5,0"/>
-            <Setter Property="Padding" Value="6,4"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#666"/>
-            <Setter Property="BorderBrush" Value="#555"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="#EEE"/>
+            <Setter Property="BorderBrush" Value="#CCC"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="border" 
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="4">
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <!-- Mouse over -->
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#777"/>
+                                <Setter TargetName="border" Property="Background" Value="#DDD"/>
                             </Trigger>
-                            <!-- Pressed -->
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#555"/>
+                                <Setter TargetName="border" Property="Background" Value="#CCC"/>
                             </Trigger>
-                            <!-- Disabled -->
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Background" Value="#aaa"/>
-                                <Setter Property="Foreground" Value="#666"/>
+                                <Setter TargetName="border" Property="Background" Value="#F5F5F5"/>
+                                <Setter Property="Foreground" Value="#AAA"/>
                                 <Setter Property="Cursor" Value="Arrow"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -49,66 +46,76 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#E0E0E0"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="BorderBrush" Value="#CCC"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        </Style>
     </UserControl.Resources>
 
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <Border Background="#FAFAFA" CornerRadius="10" Padding="18" BorderBrush="#DDD" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <!-- Toolbar -->
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10" HorizontalAlignment="Left">
-            <Button Command="{Binding CreateNewBookTitleCommand}" Width="120" Style="{StaticResource ToolbarButtonStyle}">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="➕" Margin="0,0,5,0"/>
-                    <TextBlock Text="Add Book"/>
-                </StackPanel>
-            </Button>
+            <!-- Toolbar -->
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,16" HorizontalAlignment="Left">
+                <Button Command="{Binding CreateNewBookTitleCommand}" Width="120" Style="{StaticResource ToolbarButtonStyle}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="➕" Margin="0,0,5,0"/>
+                        <TextBlock Text="Add Book"/>
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding EditNewBookTitleCommand}" 
+                        CommandParameter="{Binding SelectedBook}"
+                        Width="120" Style="{StaticResource ToolbarButtonStyle}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="✏" Margin="0,0,5,0"/>
+                        <TextBlock Text="Edit Book"/>
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding DeleteBookFromInventoryCommand}" 
+                        CommandParameter="{Binding SelectedBook}" Width="120" Style="{StaticResource ToolbarButtonStyle}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="🗑" Margin="0,0,5,0"/>
+                        <TextBlock Text="Delete Book"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
 
-            <Button Command="{Binding EditNewBookTitleCommand}" 
-                    CommandParameter="{Binding SelectedBook}"
-                    Width="120" Style="{StaticResource ToolbarButtonStyle}">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="✏" Margin="0,0,5,0"/>
-                    <TextBlock Text="Edit Book"/>
-                </StackPanel>
-            </Button>
-
-            <Button Command="{Binding DeleteBookFromInventoryCommand}" 
-                    CommandParameter="{Binding SelectedBook}" Width="120" Style="{StaticResource ToolbarButtonStyle}">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="🗑" Margin="0,0,5,0"/>
-                    <TextBlock Text="Delete Book"/>
-                </StackPanel>
-            </Button>
-        </StackPanel>
-
-        <!-- DataGrid -->
-        <DataGrid Grid.Row="1"
-                  ItemsSource="{Binding Books}" 
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserResizeRows="False"
-                  CanUserResizeColumns="False"
-                  CanUserReorderColumns="False"
-                  FontSize="12"
-                  SelectedItem="{Binding SelectedBook, Mode=TwoWay}">
-
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ISBN-13" Binding="{Binding Isbn13}" Width="100"/>
-                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="Auto"/>
-                <DataGridTextColumn Header="Author" Binding="{Binding AuthorNameString}" Width="Auto"/>
-                <DataGridTextColumn Header="Genre" Binding="{Binding GenreName}" Width="Auto"/>
-                <DataGridTextColumn Header="Language" Binding="{Binding Language}" Width="Auto"/>
-                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=F2}" Width="Auto"/>
-                <DataGridTextColumn Header="Published" Binding="{Binding PublicationDate}" Width="Auto"/>
-                <DataGridTextColumn Header="Pages" Binding="{Binding PageCount}" Width="Auto"/>
-                <DataGridTextColumn Header="Publisher" Binding="{Binding PublisherName}" Width="Auto"/>
-
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
+            <!-- DataGrid -->
+            <DataGrid Grid.Row="1"
+                      ItemsSource="{Binding Books}" 
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserResizeRows="False"
+                      CanUserResizeColumns="False"
+                      CanUserReorderColumns="False"
+                      FontSize="13"
+                      RowBackground="#FAFAFA"
+                      AlternatingRowBackground="#F5F5F5"
+                      GridLinesVisibility="All"
+                      HeadersVisibility="Column"
+                      BorderThickness="0"
+                      SelectedItem="{Binding SelectedBook, Mode=TwoWay}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ISBN-13" Binding="{Binding Isbn13}" Width="100"/>
+                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="Auto"/>
+                    <DataGridTextColumn Header="Author" Binding="{Binding AuthorNameString}" Width="Auto"/>
+                    <DataGridTextColumn Header="Genre" Binding="{Binding GenreName}" Width="Auto"/>
+                    <DataGridTextColumn Header="Language" Binding="{Binding Language}" Width="Auto"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=F2}" Width="Auto"/>
+                    <DataGridTextColumn Header="Published" Binding="{Binding PublicationDate}" Width="Auto"/>
+                    <DataGridTextColumn Header="Pages" Binding="{Binding PageCount}" Width="Auto"/>
+                    <DataGridTextColumn Header="Publisher" Binding="{Binding PublisherName}" Width="Auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Border>
 </UserControl>
