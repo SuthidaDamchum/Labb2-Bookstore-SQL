@@ -25,6 +25,7 @@ namespace BookStore_Presentation.ViewModels
             // Load reference data
             Genres = _context.Genres.ToList();
             Publishers = _context.Publishers.ToList();
+
             Authors = new ObservableCollection<AuthorItem>(
                 _context.Authors
                     .Where(a => !string.IsNullOrWhiteSpace(a.FirstName) && !string.IsNullOrWhiteSpace(a.LastName))
@@ -37,11 +38,13 @@ namespace BookStore_Presentation.ViewModels
             );
 
             foreach (var author in Authors)
-                author.PropertyChanged += OnAuthorSelectionChanged;
+            {
+
+                author.SelectionChanged = () => RaisePropertyChanged(nameof(SelectedAuthorsText));
+            }
 
             LanguageOptions = new List<string> { "English", "Swedish", "Norwegian", "French", "Spanish", "Danish", "German" };
 
-            // Commands
             SaveCommand = new AsyncDelegateCommand(Save);
             EditCommand = new AsyncDelegateCommand(Edit);
             CancelCommand = new AsyncDelegateCommand(Cancel);
@@ -98,7 +101,7 @@ namespace BookStore_Presentation.ViewModels
             SelectedGenre = Genres.FirstOrDefault(g => g.GenreName == book.GenreName);
             SelectedPublisher = Publishers.FirstOrDefault(p => p.PublisherName == book.PublisherName);
 
-            // Mark authors as selected
+            //Mark authors as selected
             foreach (var author in Authors)
                 author.IsSelected = book.AuthorIds.Contains(author.AuthorId);
         }
@@ -190,7 +193,7 @@ namespace BookStore_Presentation.ViewModels
             book.PublicationDate = publicationDate;
             book.PageCount = pageCount;
 
-            // Sync authors
+            //sync authors
             var selectedIds = SelectedAuthors.Select(a => a.AuthorId).ToList();
             var toRemove = book.BookAuthors.Where(ba => !selectedIds.Contains(ba.AuthorId)).ToList();
             foreach (var ba in toRemove) book.BookAuthors.Remove(ba);
@@ -198,6 +201,12 @@ namespace BookStore_Presentation.ViewModels
                 book.BookAuthors.Add(new BookAuthor { AuthorId = id, BookIsbn13 = book.Isbn13, Role = "Main Author" });
 
             await _context.SaveChangesAsync();
+
+            MessageBox.Show(
+                "Book edited successfully!", "Success",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
 
             if (parameter is Window window)
                 window.DialogResult = true;
