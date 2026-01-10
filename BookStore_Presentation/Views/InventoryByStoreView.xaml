@@ -48,7 +48,7 @@
 
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="160"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -60,7 +60,7 @@
                 BorderThickness="1">
 
             <StackPanel>
-                <TextBlock Text="Stores"
+                <TextBlock Text= "📚 Stores"
                            FontSize="16"
                            FontWeight="SemiBold"
                            Margin="0,0,0,8"/>
@@ -73,16 +73,16 @@
 
                 <Separator Margin="0,0,0,15"/>
 
-                <TextBlock Text="Inventory Quantity"
+                <TextBlock Text="Inventory Quantity" HorizontalAlignment="Center"
                            FontWeight="SemiBold"
-                           Margin="0,0,0,8"/>
+                           Margin="0,0,0,10"/>
 
-                <Button Content="➕ Increase Quantity"
-                        Margin="0,0,0,6"
-                        Style="{StaticResource ToolbarButtonStyle}"
+                <Button Content="➕ Increase"
+                        Margin="0,0,0,6" FontSize="12" Width="120" 
+                        Style="{StaticResource ToolbarButtonStyle}" 
                         Command="{Binding IncreaseQuantityCommand}"/>
 
-                <Button Content="➖ Decrease Quantity"
+                <Button Content="➖ Decrease" FontSize="12"  Width="120" Margin="0 0 0 6"
                         Style="{StaticResource ToolbarButtonStyle}"
                         Command="{Binding DecreaseQuantityCommand}"/>
             </StackPanel>
@@ -118,13 +118,13 @@
 
                     <StackPanel Orientation="Horizontal">
                         <Button Content="➕ Add to Store"
-                                Width="140"
+                                Width="120" FontSize="13" 
                                 Margin="0,0,8,0"
                                 Style="{StaticResource ToolbarButtonStyle}"
                                 Command="{Binding AddBookToStoreCommand}"/>
 
-                        <Button Content="🗑 Remove from Store"
-                                Width="160"
+                        <Button Content="🗑 Remove from Store" 
+                                Width="160" FontSize="13"
                                 Style="{StaticResource ToolbarButtonStyle}"
                                 Command="{Binding RemoveBookFromStoreCommand}"/>
                     </StackPanel>
