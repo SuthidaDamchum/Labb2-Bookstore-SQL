@@ -1,6 +1,6 @@
 # Develop a Relational Database App with Entity Framework 🛠️  
 
-# 🏬 Bookstore Administration
+# 🏬࿔*:･📖 Bookstore Administration
 
 Bookstore Administration is a WPF application that helps users manage inventory and data for several bookstores. The app uses Entity Framework Core, async methods, and a SQL Server database. Sensitive database connection information is stored in a JSON secrets file for security.
 
