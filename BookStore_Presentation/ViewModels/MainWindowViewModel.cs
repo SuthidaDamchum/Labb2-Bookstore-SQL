@@ -8,7 +8,7 @@ namespace BookStore_Presentation.ViewModels
     public class MainWindowViewModel : ViewModelBase
  
         {
-            // Current view bound to ContentControl
+          
             private ViewModelBase? _currentViewModel;
             public ViewModelBase? CurrentViewModel
             {
@@ -24,7 +24,7 @@ namespace BookStore_Presentation.ViewModels
         public ICommand OpenBookAdminCommand { get; }
         public ICommand OpenAllAuthorsCommand { get; }
 
-        //Keep VM instances to avoid recreating them
+
         private readonly BooksAdminViewModel _booksVm;
         private readonly AuthorsAdminViewModel _authorsVm;
         private readonly InventoryByStoreViewModel _inventoryVm;
