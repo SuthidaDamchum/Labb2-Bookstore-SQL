@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BookStore_Presentation.Dialogs"
         xmlns:viewmodels="clr-namespace:BookStore_Presentation.ViewModels"
         mc:Ignorable="d"
-        Title="New Book Title" Height="550" Width="400"
+        Title="New Book Title" Height="500" Width="400"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FAFAFA"
@@ -75,9 +75,6 @@
                 <TextBlock Text="Price:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
                 <TextBox Text="{Binding PriceText, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="1" Margin="0,0,0,8"/>
 
-        
-                <TextBlock Text="Genre:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
-                <ComboBox ItemsSource="{Binding Genres}" DisplayMemberPath="GenreName" SelectedItem="{Binding SelectedGenre}" Grid.Row="5" Grid.Column="1" Margin="0,0,0,8"/>
 
                 <TextBlock Text="Publication Date:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
                 <StackPanel Grid.Row="6" Grid.Column="1" Margin="0,0,0,8">
@@ -92,8 +89,6 @@
                 <TextBlock Text="Pages:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
                 <TextBox Text="{Binding PageCountText, UpdateSourceTrigger=PropertyChanged}" Grid.Row="7" Grid.Column="1" Margin="0,0,0,8" ToolTip="Enter number of pages"/>
 
-                <TextBlock Text="Publisher:" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,8"/>
-                <ComboBox ItemsSource="{Binding Publishers}" DisplayMemberPath="PublisherName" SelectedItem="{Binding SelectedPublisher}" Grid.Row="8" Grid.Column="1" Margin="0,0,0,8"/>
             </Grid>
         </Border>
 
