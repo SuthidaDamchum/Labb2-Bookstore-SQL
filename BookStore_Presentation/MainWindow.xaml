@@ -55,7 +55,7 @@
 
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -109,7 +109,7 @@
         <!-- MAIN CONTENT -->
         <Border Grid.Column="1"
                 Background="#F3F4F6"
-                Padding="30"
+                Padding="5"
                 CornerRadius="20,12,12,0">
             <ContentControl Content="{Binding CurrentViewModel}" />
         </Border>

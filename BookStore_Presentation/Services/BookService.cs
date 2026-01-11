@@ -21,16 +21,13 @@ namespace BookStore_Presentation.Services
                        string? language,
                        decimal? price,
                        DateOnly? publicationDate,
-                       int? pagecount,
-                       int? genreID,
-                       int? publisherId
+                       int? pagecount
+                  
                         )
                 {
 
         
                     var book = _context.Books
-                        .Include(b => b.Genre)
-                        .Include(b => b.Publisher)
                         .Include(b => b.BookAuthors)
                                .ThenInclude(ba => ba.Author)
                                .FirstOrDefault(b => b.Isbn13 == isbn13);
