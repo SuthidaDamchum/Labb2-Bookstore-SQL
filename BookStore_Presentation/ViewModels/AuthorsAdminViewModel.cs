@@ -102,8 +102,7 @@ namespace BookStore_Presentation.ViewModels
             if (SelectedAuthor == null)
                 return;
 
-
-            var dialog = new EditNewAuthorDialog
+            var dialog = new EditNewAuthorDialog(_authorService)
             {
                 DataContext = new AddNewAuthorViewModel
                 {
@@ -119,7 +118,6 @@ namespace BookStore_Presentation.ViewModels
                 return;
             }
 
-       
             var dto = dialog.Author;
             if (dto == null)
                 return;
@@ -130,17 +128,15 @@ namespace BookStore_Presentation.ViewModels
                 return;
             }
 
-
             var updateAuthor = await _authorService.UpdateAuthorAsync(
-            SelectedAuthor.AuthorId,
-                 dto.FirstName,
-                 dto.LastName,
-                 dto.BirthDay
+                SelectedAuthor.AuthorId,
+                dto.FirstName,
+                dto.LastName,
+                dto.BirthDay
             );
 
             SelectedAuthor.FullName = updateAuthor.FirstName + " " + updateAuthor.LastName;
             SelectedAuthor.BirthDay = updateAuthor.BirthDay;
-
         }
 
 

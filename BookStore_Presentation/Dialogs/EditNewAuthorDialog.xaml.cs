@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BookStore_Presentation.Models;
+using BookStore_Presentation.Services;
 using BookStore_Presentation.ViewModels;
+using Microsoft.VisualStudio.Services.DelegatedAuthorization;
 
 
 namespace BookStore_Presentation.Dialogs
@@ -22,16 +24,25 @@ namespace BookStore_Presentation.Dialogs
     /// </summary>
     public partial class EditNewAuthorDialog : Window
     {
+        private readonly AuthorService _authorService;
         public CreateNewAuthorDto? Author { get; private set; }
-        public EditNewAuthorDialog()
+        public EditNewAuthorDialog(AuthorService authorService)
         {
             InitializeComponent();
+            _authorService = authorService;
+
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
             if (DataContext is AddNewAuthorViewModel vm)
             {
+                string? errorMessage;
+                if (!_authorService.IsValidAuthor(vm.FirstName, vm.LastName, vm.BirthDayText, out errorMessage))
+                {
+                    MessageBox.Show(errorMessage, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
                 DateOnly? birthDate = null;
                 if (!string.IsNullOrWhiteSpace(vm.BirthDayText) &&
@@ -40,7 +51,6 @@ namespace BookStore_Presentation.Dialogs
                     birthDate = d;
                 }
 
-    
                 Author = new CreateNewAuthorDto
                 {
                     FirstName = vm.FirstName,
@@ -48,8 +58,8 @@ namespace BookStore_Presentation.Dialogs
                     BirthDay = birthDate
                 };
 
-                DialogResult = true;
                 MessageBox.Show("Author edited successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                DialogResult = true;
                 Close();
             }
         }
