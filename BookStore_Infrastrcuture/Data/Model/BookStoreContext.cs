@@ -114,7 +114,19 @@ public partial class BookStoreContext : DbContext
       {
           BookIsbn13 = "9781111000001",
           AuthorId = 26
-      }
+      },
+
+          new BookAuthor
+          {
+              BookIsbn13 = "9781111000002",
+              AuthorId = 27
+          },
+
+           new BookAuthor
+           {
+               BookIsbn13 = "9781111000003",
+               AuthorId = 27
+           }
      );
 
         modelBuilder.Entity<Inventory>().HasData(
@@ -144,8 +156,6 @@ public partial class BookStoreContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
-
-
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
